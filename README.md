@@ -1,6 +1,6 @@
 # IOS Contact App
 ```sh
-Vanila IOS Contact application
+Vanilla IOS Contact application
 ```
 ## Features
 
