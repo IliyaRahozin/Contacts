@@ -140,7 +140,7 @@ class AddContactVC: UITableViewController {
         headerView = HeaderView()
         headerView?.delegate = self
         if contactState == .existingContact {
-            headerView?.setImage(image: newContact.loadImage())
+            headerView?.setContact(newContact)
         }
         self.tableView.addSubview(headerView!)
     }
@@ -683,10 +683,12 @@ extension AddContactVC: UIImagePickerControllerDelegate, UINavigationControllerD
         picker.dismiss(animated: true) {
             if let image = info[UIImagePickerController.InfoKey.editedImage] as? UIImage {
                 DispatchQueue.main.async { [weak self] in
-                        guard let self = self else { return }
+                        guard let self = self else {
+                            return
+                        }
                         if let header = self.headerView {
                             self.newContact.saveImage(image: image)
-                            header.setImage(image: self.newContact.loadImage())
+                            header.setImage(image: image)
                             self.tableView.beginUpdates()
                             self.tableView.endUpdates()
                         } else { }
@@ -723,7 +725,7 @@ extension AddContactVC: PHPickerViewControllerDelegate, PHPhotoLibraryChangeObse
                     if let image = image as? UIImage {
                         if let header = self?.headerView {
                             self?.newContact.saveImage(image: image)
-                            header.setImage(image: self?.newContact.loadImage())
+                            header.setContact(self?.newContact)
                             self?.tableView.beginUpdates()
                             self?.tableView.endUpdates()
                         }

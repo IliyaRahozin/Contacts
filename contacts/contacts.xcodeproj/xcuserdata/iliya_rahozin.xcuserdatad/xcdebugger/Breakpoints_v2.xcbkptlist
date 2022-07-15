@@ -30,9 +30,9 @@
             filePath = "contacts/Model/ContactUser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "150"
-            endingLineNumber = "150"
-            landmarkName = "loadImage()"
+            startingLineNumber = "142"
+            endingLineNumber = "142"
+            landmarkName = "loadImage(completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -62,9 +62,9 @@
             filePath = "contacts/Model/ContactUser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "163"
-            endingLineNumber = "163"
-            landmarkName = "getDocumentsDirectory()"
+            startingLineNumber = "155"
+            endingLineNumber = "155"
+            landmarkName = "loadImage(completion:)"
             landmarkType = "7">
          </BreakpointContent>
       </BreakpointProxy>
@@ -158,8 +158,8 @@
             filePath = "contacts/Model/ContactUser.swift"
             startingColumnNumber = "9223372036854775807"
             endingColumnNumber = "9223372036854775807"
-            startingLineNumber = "140"
-            endingLineNumber = "140"
+            startingLineNumber = "132"
+            endingLineNumber = "132"
             landmarkName = "saveImage(image:)"
             landmarkType = "7">
          </BreakpointContent>
@@ -208,8 +208,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "714"
             endingLineNumber = "714"
-            landmarkName = "picker(_:didFinishPicking:)"
-            landmarkType = "7">
+            landmarkName = "AddContactVC"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy
@@ -288,8 +288,8 @@
             endingColumnNumber = "9223372036854775807"
             startingLineNumber = "715"
             endingLineNumber = "715"
-            landmarkName = "picker(_:didFinishPicking:)"
-            landmarkType = "7">
+            landmarkName = "AddContactVC"
+            landmarkType = "21">
          </BreakpointContent>
       </BreakpointProxy>
       <BreakpointProxy

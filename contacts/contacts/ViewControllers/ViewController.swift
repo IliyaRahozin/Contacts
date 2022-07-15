@@ -111,10 +111,7 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCell(withIdentifier: "ContactTableViewCell", for: indexPath) as! ContactTableViewCell
-        cell.setContactImage(image: dataManager.contacts[indexPath.row].loadImage())
-        //cell.setContactImage(image: dataManager.contacts[indexPath.row].image)
-        cell.setFullNameLabel(text: dataManager.contacts[indexPath.row].fullName) //data[indexPath.row]
-        cell.setLowerInfoLabel(text: dataManager.contacts[indexPath.row].phoneNumber ?? dataManager.contacts[indexPath.row].email ?? "")
+        cell.setContact(dataManager.contacts[indexPath.row])
         return cell
     }
     
@@ -125,7 +122,6 @@ extension ViewController: UITableViewDelegate, UITableViewDataSource {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         let contactUser = dataManager.contacts[indexPath.row]
         showDetailVC(contactUser)
-        
     }
 }
 

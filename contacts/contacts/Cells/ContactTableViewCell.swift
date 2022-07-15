@@ -15,6 +15,12 @@ class ContactTableViewCell: UITableViewCell {
     let defaultImage = UIImage(named: "person.crop.circle.fill")
     static let identifier = "ContactTableViewCell"
     
+    private var contact: ContactUser? {
+        didSet {
+            setupView()
+        }
+    }
+    
     static func nib() -> UINib {
         return UINib(nibName: identifier, bundle: nil)
     }
@@ -25,13 +31,17 @@ class ContactTableViewCell: UITableViewCell {
         contactImage.contentMode = .scaleAspectFill
     }
 
+    func setContact(_ contact: ContactUser) {
+        self.contact = contact
+    }
+    
     override func setSelected(_ selected: Bool, animated: Bool) {
         super.setSelected(selected, animated: animated)
 
         // Configure the view for the selected state
     }
     
-    func setContactImage(image: UIImage?) {
+    private func setContactImage(image: UIImage?) {
         contactImage.image = image ?? defaultImage
         setDefaultImgTint()
         setRounded()
@@ -49,11 +59,11 @@ class ContactTableViewCell: UITableViewCell {
         }
     }
     
-    func setFullNameLabel(text: String?) {
+    private func setFullNameLabel(text: String?) {
         fullNameLabel.text = text
     }
     
-    func setLowerInfoLabel(text: String?) {
+    private func setLowerInfoLabel(text: String?) {
         lowerInfoLabel.text = text
     }
     
@@ -62,4 +72,17 @@ class ContactTableViewCell: UITableViewCell {
         contactImage.layer.cornerRadius =  contactImage.frame.width / 2
     }
     
+    private func setupView() {
+        guard let contact = contact else {
+            return
+        }
+
+        contact.loadImage { image in
+            DispatchQueue.main.async { [weak self] in
+                self?.setContactImage(image: image)
+            }
+        }
+        setFullNameLabel(text: contact.fullName)
+        setLowerInfoLabel(text: contact.phoneNumber ?? contact.email ?? "")
+    }
 }

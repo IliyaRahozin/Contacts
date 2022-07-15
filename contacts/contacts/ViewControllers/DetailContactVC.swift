@@ -46,14 +46,12 @@ class DetailContactVC: UITableViewController {
     private func setHeaderView() {
         headerView = HeaderView(style: .detail)
         headerView?.delegate = self
-        headerView?.setImage(image: existingContact?.loadImage())
-        headerView?.fullNameLabel.text = existingContact?.fullName != nil ? existingContact?.fullName : (existingContact?.phoneNumber ?? existingContact?.email)
+        headerView?.setContact(existingContact)
         self.tableView.addSubview(headerView!)
     }
     
     private func updateHeader() {
-        headerView?.setImage(image: existingContact?.loadImage() ?? headerView?.defaultImg)
-        headerView?.fullNameLabel.text = existingContact?.fullName != nil ? existingContact?.fullName : (existingContact?.phoneNumber ?? existingContact?.email)
+        headerView?.setContact(existingContact)
     }
     
     private func setCells() {
@@ -222,6 +220,7 @@ extension DetailContactVC: AddContactDelegate {
 
 
 extension DetailContactVC: ButtonCellDelegate {
+
     func buttonDidTapped() {
         print("Contact Deleted")
         deleteAction()
@@ -251,11 +250,10 @@ extension DetailContactVC: ButtonCellDelegate {
         }))
         self.present(alert, animated: true, completion: nil)
     }
-    
 }
 
-
 extension DetailContactVC: HeaderViewDelegate {
+
     func imgBtnPressed() {
         
     }
@@ -263,6 +261,4 @@ extension DetailContactVC: HeaderViewDelegate {
     func didChangeImage() {
         self.tableView.reloadData()
     }
-    
-    
 }

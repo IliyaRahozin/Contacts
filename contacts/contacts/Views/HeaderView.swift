@@ -24,6 +24,29 @@ class HeaderView: UIView {
         case small = 46
     }
     
+    private var contact: ContactUser? {
+        didSet {
+            setupUI()
+        }
+    }
+    
+    private func setupUI() {
+        guard let contact = contact else {
+            return
+        }
+
+        contact.loadImage { image in
+            DispatchQueue.main.async { [weak self] in
+                self?.setImage(image: image)
+            }
+        }
+        self.fullNameLabel.text = contact.fullName != nil ? contact.fullName : (contact.phoneNumber ?? contact.email)
+    }
+    
+    func setContact(_ contact: ContactUser?) {
+        self.contact = contact
+    }
+    
     private var imageView: UIImageView = {
         let img = UIImageView()
         img.image = UIImage(named: "person.crop.circle.fill")
@@ -46,7 +69,7 @@ class HeaderView: UIView {
         return button
     }()
     
-    lazy var fullNameLabel: UILabel = {
+    private lazy var fullNameLabel: UILabel = {
         let lbl = UILabel()
         lbl.text = nil
         lbl.textAlignment = .center

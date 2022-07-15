@@ -25,39 +25,24 @@ protocol ContactProtocol {
 
 
 class ContactUser: ContactProtocol, NSCopying {
-    var id: UUID
 
+    var id: UUID
     var imageData: String?
-    
     var firstName: String?
-    
     var lastName: String?
-    
     var phoneNumber: String?
-    
     var email: String?
-    
     var birthday: String?
-    
     var height: String?
-    
     var drivingLicense: String?
-    
     var notes: String?
+    var image: UIImage?
     
     init() {
         self.id = UUID()
-        self.imageData = nil
-        self.firstName = nil
-        self.lastName = nil
-        self.phoneNumber = nil
-        self.birthday = nil
-        self.height = nil
-        self.drivingLicense = nil
-        self.notes = nil
     }
     
-    init(userImage: String?, firstName: String?, lastName: String?, phoneNumber: String?, email: String?, birthday: String?, height: String?, drivingLicense: String?, notes: String?) {
+    init(userImage: String?, firstName: String?,lastName: String?,phoneNumber: String?,email: String?,birthday: String?,height: String?,drivingLicense: String?,notes: String?) {
         self.id = UUID()
         self.imageData = userImage
         self.firstName = firstName
@@ -142,22 +127,32 @@ class ContactUser: ContactProtocol, NSCopying {
             if let data = image.jpegData(compressionQuality: 0.5) {
                     print(self.id.description)
                     let filename = self.getDocumentsDirectory().appendingPathComponent("\(self.id.uuidString).jpeg")
-                    try? data.write(to: filename)
+                guard let _ = try? data.write(to: filename) else {
+                    print("Error saving image: \(filename)")
+                    return
+                }
+                
             }
         }
     }
     
-    func loadImage() -> UIImage {
-        // autoreleasepool {
-            if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false) {
-                let imageUrl = URL(fileURLWithPath: dir.absoluteString).appendingPathComponent("\(self.id.uuidString).jpeg")
-                if let image = UIImage(contentsOfFile: imageUrl.path) {
-                    return image
+    func loadImage(completion: @escaping (UIImage?) -> Void) {
+        if let image = image {
+            completion(image)
+        } else {
+            DispatchQueue.global(qos: .userInitiated).async { [weak self] in
+                if let dir = try? FileManager.default.url(for: .documentDirectory, in: .userDomainMask, appropriateFor: nil, create: false), let udid = self?.id.uuidString {
+                    let imageUrl = URL(fileURLWithPath: dir.absoluteString).appendingPathComponent("\(udid).jpeg")
+                    if let image = UIImage(contentsOfFile: imageUrl.path) {
+                        
+                        self?.image = UIImage.resizeImage(image: image, size: CGSize(width: 50, height: 50))
+                        return completion(image)
+                    }
                 }
-            }
-            return UIImage(named: "person.crop.circle.fill")!
+                return completion(UIImage(named: "person.crop.circle.fill"))
 
-//        }
+            }
+        }
     }
     
     private func getDocumentsDirectory() -> URL {
@@ -188,4 +183,49 @@ class ContactUser: ContactProtocol, NSCopying {
 //        self.drivingLicense = coder.decodeObject(forKey: "drivingLicense") as? String ?? nil
 //        self.notes = coder.decodeObject(forKey: "notes") as? String ?? nil
 //    }
+}
+
+extension UIImage {
+    static func resizeImage(image: UIImage, size: CGSize) -> UIImage? {
+        var returnImage: UIImage?
+
+        var scaleFactor: CGFloat = 1.0
+        var scaledWidth = size.width
+        var scaledHeight = size.height
+        var thumbnailPoint = CGPoint(x:0, y:0)
+
+        if !image.size.equalTo(size) {
+            let widthFactor = size.width / image.size.width
+            let heightFactor = size.height / image.size.height
+
+            if widthFactor > heightFactor {
+                scaleFactor = widthFactor
+            } else {
+                scaleFactor = heightFactor
+            }
+
+            scaledWidth = image.size.width * scaleFactor
+            scaledHeight = image.size.height * scaleFactor
+
+            if widthFactor > heightFactor {
+                thumbnailPoint.y = (size.height - scaledHeight) * 0.5
+            } else if widthFactor < heightFactor {
+                thumbnailPoint.x = (size.width - scaledWidth) * 0.5
+            }
+        }
+
+        UIGraphicsBeginImageContextWithOptions(size, true, 0)
+
+        var thumbnailRect = CGRect(x: 0, y: 0, width: 0, height: 0)
+        thumbnailRect.origin = thumbnailPoint
+        thumbnailRect.size.width = scaledWidth
+        thumbnailRect.size.height = scaledHeight
+
+        image.draw(in: thumbnailRect)
+        returnImage = UIGraphicsGetImageFromCurrentImageContext()
+
+        UIGraphicsEndImageContext()
+
+        return returnImage
+    }
 }
